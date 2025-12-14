@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { format } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import { TimeCard } from './components/TimeCard';
 import { ReferenceClocks } from './components/ReferenceClocks';
 
@@ -14,6 +16,13 @@ const App: React.FC = () => {
 
   const [userZone, setUserZone] = useState<string>('Asia/Kolkata');
   const [clientZone, setClientZone] = useState<string>('America/New_York');
+
+  // Specific summary zones requested
+  const summaryZones = [
+      { id: 'America/Los_Angeles', label: 'PST (Pacific)' },
+      { id: 'America/New_York', label: 'EST (Eastern)' },
+      { id: 'Asia/Kolkata', label: 'IST (India)' },
+  ];
 
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950 via-slate-950 to-slate-950 text-white selection:bg-indigo-500/30">
@@ -45,8 +54,7 @@ const App: React.FC = () => {
         </div>
 
         {/* Hero Section / Controls */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* User Card */}
             <TimeCard 
                 title="Your Location" 
@@ -68,7 +76,25 @@ const App: React.FC = () => {
                 onZoneChange={setClientZone}
                 icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>}
             />
+        </div>
 
+        {/* Meeting Booked Time Summary */}
+        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+                Selected Meeting Time
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {summaryZones.map((zone) => {
+                    const zTime = toZonedTime(meetingTime, zone.id);
+                    return (
+                        <div key={zone.id} className="flex flex-col border-l-2 border-slate-800 pl-4">
+                            <span className="text-xs text-slate-500 font-bold uppercase mb-1">{zone.label}</span>
+                            <span className="text-2xl font-mono text-slate-100">{format(zTime, 'h:mm a')}</span>
+                            <span className="text-xs text-slate-400">{format(zTime, 'EEE, MMM d')}</span>
+                        </div>
+                    )
+                })}
+            </div>
         </div>
 
       </main>

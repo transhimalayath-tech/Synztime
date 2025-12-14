@@ -6,7 +6,7 @@ interface ReferenceClocksProps {
   baseDate: Date;
 }
 
-// Strictly defined list as per user request: PST, EST, IST (added GMT/UTC as standard baseline)
+// Focused list: US West, US East, Europe (London), India (IST)
 const ZONES_TO_DISPLAY = [
   { label: 'PST', subLabel: 'Pacific', zone: 'America/Los_Angeles', color: 'text-pink-400', border: 'border-pink-500/20' },
   { label: 'EST', subLabel: 'Eastern', zone: 'America/New_York', color: 'text-purple-400', border: 'border-purple-500/20' },
@@ -27,7 +27,7 @@ export const ReferenceClocks: React.FC<ReferenceClocksProps> = ({ baseDate }) =>
                  <span className="text-[10px] text-slate-500 uppercase">{item.subLabel}</span>
             </div>
             <span className="text-3xl font-mono text-slate-100 font-medium tracking-tight">
-              {format(timeInZone, 'HH:mm')}
+              {format(timeInZone, 'h:mm a')}
             </span>
             <span className="text-xs text-slate-400 font-medium mt-1">
               {format(timeInZone, 'EEE, MMM d')}
