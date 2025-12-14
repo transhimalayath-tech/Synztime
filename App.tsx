@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 import { TimeCard } from './components/TimeCard';
 import { ReferenceClocks } from './components/ReferenceClocks';
+import { LiveFooter } from './components/LiveFooter';
 
 const App: React.FC = () => {
   // Core State: The single source of truth is `meetingTime` in UTC.
@@ -25,10 +26,10 @@ const App: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950 via-slate-950 to-slate-950 text-white selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950 via-slate-950 to-slate-950 text-white selection:bg-indigo-500/30 flex flex-col">
       
       {/* Navbar */}
-      <nav className="border-b border-slate-800/60 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
+      <nav className="border-b border-slate-800/60 bg-slate-950/50 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
              <div className="bg-indigo-600 p-1.5 rounded-lg">
@@ -42,7 +43,8 @@ const App: React.FC = () => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {/* Main Content - Added padding bottom (pb-32) to accommodate fixed footer */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-32 flex-grow w-full">
         
         {/* Global Reference Bar - Prominent placement as requested */}
         <div className="mb-8">
@@ -98,6 +100,10 @@ const App: React.FC = () => {
         </div>
 
       </main>
+
+      {/* Live Footer */}
+      <LiveFooter targetDate={meetingTime} />
+
     </div>
   );
 };
