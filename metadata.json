@@ -1,0 +1,5 @@
+{
+  "name": "SyncZone",
+  "description": "A smart meeting scheduler handling complex time zone conversions.",
+  "requestFramePermissions": []
+}
