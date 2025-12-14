@@ -4,6 +4,7 @@ import { toZonedTime } from 'date-fns-tz';
 import { TimeCard } from './components/TimeCard';
 import { ReferenceClocks } from './components/ReferenceClocks';
 import { LiveFooter } from './components/LiveFooter';
+import { COMMON_TIMEZONES } from './constants';
 
 const App: React.FC = () => {
   // Core State: The single source of truth is `meetingTime` in UTC.
@@ -18,11 +19,28 @@ const App: React.FC = () => {
   const [userZone, setUserZone] = useState<string>('Asia/Kolkata');
   const [clientZone, setClientZone] = useState<string>('America/New_York');
 
-  // Specific summary zones requested
+  // Helper to lookup abbreviation
+  const getAbbrev = (zoneId: string) => {
+    return COMMON_TIMEZONES.find(z => z.id === zoneId)?.abbrev || 'LOC';
+  };
+
+  // Dynamic summary zones: User, Client, IST
   const summaryZones = [
-      { id: 'America/Los_Angeles', label: 'PST (Pacific)' },
-      { id: 'America/New_York', label: 'EST (Eastern)' },
-      { id: 'Asia/Kolkata', label: 'IST (India)' },
+      { 
+        id: userZone, 
+        label: `${getAbbrev(userZone)} (User)`,
+        sub: 'Your Time'
+      },
+      { 
+        id: clientZone, 
+        label: `${getAbbrev(clientZone)} (Client)`,
+        sub: 'Client Time'
+      },
+      { 
+        id: 'Asia/Kolkata', 
+        label: 'IST (India)',
+        sub: 'Reference'
+      },
   ];
 
   return (
@@ -86,10 +104,10 @@ const App: React.FC = () => {
                 Selected Meeting Time
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {summaryZones.map((zone) => {
+                {summaryZones.map((zone, index) => {
                     const zTime = toZonedTime(meetingTime, zone.id);
                     return (
-                        <div key={zone.id} className="flex flex-col border-l-2 border-slate-800 pl-4">
+                        <div key={`${zone.id}-${index}`} className="flex flex-col border-l-2 border-slate-800 pl-4 transition-colors hover:border-indigo-500/50">
                             <span className="text-xs text-slate-500 font-bold uppercase mb-1">{zone.label}</span>
                             <span className="text-2xl font-mono text-slate-100">{format(zTime, 'h:mm a')}</span>
                             <span className="text-xs text-slate-400">{format(zTime, 'EEE, MMM d')}</span>
